@@ -28,8 +28,16 @@ public class InputManger {
 			} finally {
 				scan.nextLine();
 			}
-			
 		}
+	}
+	
+	public static String getStringValue(String msg) {
+		System.out.printf("▶︎ %s 입력 : ",msg);
+		return scan.next();
+	}
+	
+	public static void noDataSign() {
+		System.out.println("[ no Data ]");
 	}
 	
 }
