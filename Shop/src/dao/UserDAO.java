@@ -14,6 +14,39 @@ public class UserDAO {
 		uList = new ArrayList<User>();
 	}
 	
+	private void printToUserList() {
+		if(cnt==0) {
+			InputManger.noDataSign();
+			return;
+		}
+		int idx = 1;
+		System.out.println("============================");
+		System.out.printf("\t%s\t%s\t%s\n","Id","Pw","Name");
+		System.out.println("----------------------------");
+		for(User u : uList) {
+			System.out.print("("+ (idx++) +")\t");
+			System.out.print(u);
+		}
+		System.out.println("============================");
+	}
+	
+	public void adminControllToUser(CartDAO cDAO) {
+		printToUserList();
+		if(cnt==0) return;
+		System.out.println("[1.유저 삭제] [0.뒤로가기]");
+		int sel = InputManger.getIntValue("메뉴 선택", 0, 1, 0);
+		if(sel==1) {
+			int idx = InputManger.getIntValue("삭제할 유저 번호 선택",1,cnt,0)-1;
+			String id = uList.get(idx).getId();
+			cDAO.deleteOneUser(id);
+			uList.remove(idx);
+			cnt-=1;
+			System.out.println("[ 유저 삭제 완료 ]");
+		}else if(sel==0) {
+			return;
+		}
+	}
+	
 	private User checkId(String id) {
 		if(cnt==0) return null;
 		for(User u : uList) {
@@ -23,6 +56,7 @@ public class UserDAO {
 		}
 		return null;
 	}
+	
 	public void joinUser() {
 		String id = InputManger.getStringValue("아이디");
 		User u = checkId(id);
@@ -77,5 +111,29 @@ public class UserDAO {
 			return null;
 		}
 		return id;
+	}
+	
+	public String saveToData() {
+		if(cnt==0) {
+			InputManger.noDataSign();
+			return null;
+		}
+		String data="";
+		for(User u : uList) {
+			data += u.saveToData();
+		}
+		return data;
+	}
+	
+	public void loadToFile(String data) {
+		String[] temp = data.split("\n");
+		cnt = temp.length;
+		
+		for(int i=0 ; i<cnt ; i+=1) {
+			String[] info = temp[i].split("/");
+			
+			User u = new User(info[0], info[1], info[2]);
+			uList.add(u);		
+		}
 	}
 }

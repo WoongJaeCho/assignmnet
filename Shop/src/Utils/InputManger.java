@@ -36,6 +36,23 @@ public class InputManger {
 		return scan.next();
 	}
 	
+	public static int getIntValue(String msg) {
+		while(true) {
+		System.out.printf("▶︎ %s 입력 : ",msg);
+			try {
+				int input = scan.nextInt();
+				if(input < 0) {
+					System.out.println("양수값 입력할 것.");
+				}
+				return input;
+			} catch (Exception e) {
+				System.out.println("정수 값 입력할 것.");
+			} finally{
+				scan.nextLine();
+			}
+		}
+	}
+	
 	public static void noDataSign() {
 		System.out.println("[ no Data ]");
 	}

@@ -16,7 +16,6 @@ public class Cart {
 		return userId;
 	}
 
-
 	public String getItemName() {
 		return itemName;
 	}
@@ -24,4 +23,11 @@ public class Cart {
 	public String saveToData() {
 		return "%s/%s\n".formatted(userId,itemName);
 	}
+
+	@Override
+	public String toString() {
+		return userId + "\t\t" + itemName;
+	}
+	
+	
 }
