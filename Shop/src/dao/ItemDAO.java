@@ -16,6 +16,16 @@ public class ItemDAO {
 		cateList = new ArrayList<String>();
 	}
 	
+	public int oneItemPriceTotal(String name) {
+		int total=0;
+		for(Item i : iList) {
+			if(i.getName().equals(name)) {
+				total += i.getPrice();
+			}
+		}
+		return total;
+	}
+	
 	private int checkDuplicate(String category) {
 		if(cateList.size()==0) return -1;
 		for(int i =0; i<cateList.size() ; i+=1) {

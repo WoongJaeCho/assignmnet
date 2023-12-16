@@ -19,12 +19,12 @@ public class InputManger {
 				int input = scan.nextInt();
 				if(input == ex) return input;
 				if(input<start || input>end) {
-					System.out.println("입력 범위 오류");
+					System.err.println("입력 범위 오류");
 					continue;
 				}
 				return input;
 			} catch (Exception e) {
-				System.out.println("정수 값 입력할 것.");
+				System.err.println("정수 값 입력할 것.");
 			} finally {
 				scan.nextLine();
 			}
@@ -42,11 +42,11 @@ public class InputManger {
 			try {
 				int input = scan.nextInt();
 				if(input < 0) {
-					System.out.println("양수값 입력할 것.");
+					System.err.println("양수값 입력할 것.");
 				}
 				return input;
 			} catch (Exception e) {
-				System.out.println("정수 값 입력할 것.");
+				System.err.println("정수 값 입력할 것.");
 			} finally{
 				scan.nextLine();
 			}
@@ -54,7 +54,7 @@ public class InputManger {
 	}
 	
 	public static void noDataSign() {
-		System.out.println("[ no Data ]");
+		System.err.println("[ no Data ]");
 	}
 	
 }

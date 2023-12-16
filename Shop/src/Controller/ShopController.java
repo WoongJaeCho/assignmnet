@@ -58,8 +58,8 @@ public class ShopController {
 	}
 	private void userMenu() {
 		while(true) {
-			System.out.println("[1.쇼핑] [2.장바구니목록] [0.뒤로가기]");
 			System.out.println("[ "+log+"님 로그인 ]");
+			System.out.println("[1.쇼핑] [2.장바구니목록] [0.뒤로가기]");
 			int sel = InputManger.getIntValue("메뉴 선택", 1, 2, 0);
 			if(sel == 1) {
 				System.out.println("[ 쇼 핑 ]"); // 카테고리 -> 아이템 출력
@@ -78,10 +78,13 @@ public class ShopController {
 			int sel = InputManger.getIntValue("메뉴 선택", 1, 3, 0);
 			if(sel == 1) {
 				System.out.println("[ 내 장바구니 ]"); // 장바구니 목록 출력 
+				cDAO.printOneCartList(iDAO,log);
 			} else if(sel == 2) {
 				System.out.println("[ 삭 제 ]"); // 전체삭제,개별삭제
+				cDAO.deleteAllCartList(iDAO,log);
 			} else if(sel == 3) {
 				System.out.println("[ 구 입 ]"); // 장바구니 목록 선택, 구입시 장바구니 목록 삭제
+				cDAO.purchaseAllCartList(iDAO, log);
 			} else if(sel == 0) {
 				return;
 			}
