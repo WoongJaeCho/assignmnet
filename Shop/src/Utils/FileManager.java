@@ -16,7 +16,7 @@ public class FileManager {
 	private void saveToFileData(String fileName, String data) {
 		try(FileWriter fw = new FileWriter(CUR_PATH+fileName)){
 			fw.write(data);
-			System.out.println(fileName+" 파일 저장 실패");
+			System.out.println(fileName+" 파일 저장 성공");
 		} catch (IOException e) {
 			System.out.println(fileName+" 파일 저장 실패");
 		}
@@ -24,8 +24,8 @@ public class FileManager {
 	
 	public void saveToFile(UserDAO uDAO, ItemDAO iDAO, CartDAO cDAO) {
 		String uData = uDAO.saveToData();
-		String iData = cDAO.saveToData();
-		String cData = iDAO.saveToData();
+		String iData = iDAO.saveToData();
+		String cData = cDAO.saveToData();
 		saveToFileData("user.txt", uData);
 		saveToFileData("item.txt", iData);
 		saveToFileData("cart.txt", cData);

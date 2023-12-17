@@ -13,6 +13,12 @@ public class CartDAO {
 	public void init() {
 		cList = new ArrayList<Cart>();
 	}
+	
+	public void addOneUserOneCart(String userId, String itemName) {
+		cList.add(new Cart(userId, itemName));
+		cnt+=1;
+	}
+	
 	private int countOneUserCart(String id) {
 		int count=0;
 		for(Cart c : cList) {

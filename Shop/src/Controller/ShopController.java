@@ -63,6 +63,7 @@ public class ShopController {
 			int sel = InputManger.getIntValue("메뉴 선택", 1, 2, 0);
 			if(sel == 1) {
 				System.out.println("[ 쇼 핑 ]"); // 카테고리 -> 아이템 출력
+				iDAO.addOneUserShoppingList(cDAO,log);
 			} else if(sel == 2) {
 				System.out.println("[ 장바구니 목록 ]"); // 해당 log 장바구니 목록 출력
 				cartMenu();

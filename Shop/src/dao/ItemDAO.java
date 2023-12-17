@@ -16,6 +16,19 @@ public class ItemDAO {
 		cateList = new ArrayList<String>();
 	}
 	
+	public void addOneUserShoppingList(CartDAO cDAO, String id) {
+		String category = printCategory();
+		if(category == null) return;
+		String item = InputManger.getStringValue("아이템");
+		int idx = checkDuplItem(item);
+		if(idx==-1) {
+			System.out.println("해당 아이템이 없습니다.");
+			return;
+		}
+		cDAO.addOneUserOneCart(id, item);
+		System.out.printf("[ 장바구니 (%s) 추가 완료 ]\n",item);
+	}
+
 	public int oneItemPriceTotal(String name) {
 		int total=0;
 		for(Item i : iList) {
@@ -35,6 +48,7 @@ public class ItemDAO {
 		}
 		return -1;
 	}
+	
 	private void printCategoryList() {
 		if(cateList.size()!=0) {
 			for(int i=0;i<cateList.size();i+=1 ) {
@@ -42,6 +56,17 @@ public class ItemDAO {
 			}
 		}
 	}
+	
+	private void categoryChange(String category, String newCategory) {
+		for(int k=0; k<cnt; k+=1) {
+			if(iList.get(k).getCategory().equals(category)) {
+				String name = iList.get(k).getName();
+				int price = iList.get(k).getPrice();		
+				iList.set(k, new Item(name, price, newCategory));
+			}
+		}
+	}
+	
 	public void categoryList(CartDAO cDAO) {
 		while(true) {
 			if(cateList.size()!=0) printCategoryList();
@@ -68,13 +93,15 @@ public class ItemDAO {
 				}
 				sel = InputManger.getIntValue("수정할 카테고리 번호 선택", 1, cateList.size(), 0)-1;
 				if(sel == -1) return;
-				String category = InputManger.getStringValue("[수정] 카테고리");
-				int idx = checkDuplicate(category);
+				String category = cateList.get(sel);
+				String newCategory = InputManger.getStringValue("[수정] 카테고리");
+				int idx = checkDuplicate(newCategory);
 				if(idx!=-1) {
 					System.out.println("중복된 카테고리가 있습니다.");
 					return;
 				}
-				cateList.set(sel, category);
+				categoryChange(category, newCategory);
+				cateList.set(sel, newCategory);
 				System.out.println("[ 카테고리 수정 완료 ]");
 			} else if(sel == 3) {
 				System.out.println("[ 카테고리 삭제 ]");
@@ -119,6 +146,7 @@ public class ItemDAO {
 			return cnt;
 		} else return 0;
 	}
+	
 	private int checkDuplItem(String item) {
 		if(iList.size()==0) return -1;
 		for(int k=0; k<iList.size();k+=1) {
@@ -168,7 +196,7 @@ public class ItemDAO {
 			}
 		}
 		while(true) {
-			System.out.println("[1.아이템 추가] [2.아이템 수정] [3.아이템 삭제] [0.뒤로가기]");
+			System.out.println("[1.아이템 추가] [2.아이템 가격 수정] [3.아이템 삭제] [0.뒤로가기]");
 			int sel = InputManger.getIntValue("메뉴 선택", 1, 4, 0);
 			if(sel == 1) {
 				System.out.println("[ 아이템 추가 ]");
@@ -192,15 +220,8 @@ public class ItemDAO {
 				}
 				String category = printCategory();
 				if(category == null) return;
-				System.out.println("(0) 뒤로가기");
-				printItemList(category);
 				int index = getIdxToName("수정할 아이템 이름 입력");
-				String item = InputManger.getStringValue("[수정] 아이템");
-				int idx = checkDuplItem(item);
-				if(idx!=-1) {
-					System.out.println("중복된 아이템이 있습니다.");
-					return;
-				}
+				String item = iList.get(index).getName();
 				int price = InputManger.getIntValue("[수정] 가격");
 				iList.set(index, new Item(item, price, category));
 				System.out.println("[ 아이템 수정 완료 ]");
