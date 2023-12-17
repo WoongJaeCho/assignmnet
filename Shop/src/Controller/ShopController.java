@@ -34,9 +34,15 @@ public class ShopController {
 				uDAO.joinUser();
 			} else if(sel == 2) {
 				System.out.println("[ 탈 퇴 ]");
-				uDAO.deleteUser(log);
+				uDAO.deleteUser(cDAO,log);
+				log=null;
 			} else if(sel == 3) {
+				
 				System.out.println("[ 로그인 ]");
+				if(log!=null) {
+					System.out.println("이미 로그인 상태 입니다.");
+					return;
+				}
 				log = uDAO.login();
 				if(log!=null) {
 					userMenu();

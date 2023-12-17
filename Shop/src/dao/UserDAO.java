@@ -36,9 +36,9 @@ public class UserDAO {
 		System.out.println("[1.유저 삭제] [0.뒤로가기]");
 		int sel = InputManger.getIntValue("메뉴 선택", 0, 1, 0);
 		if(sel==1) {
-			int idx = InputManger.getIntValue("삭제할 유저 번호 선택",1,cnt,0)-1;
+			int idx = InputManger.getIntValue("삭제할 유저 번호 선택",1,cnt,1)-1;
 			String id = uList.get(idx).getId();
-			cDAO.deleteOneUser(id);
+			cDAO.deleteOneUserCart(id);
 			uList.remove(idx);
 			cnt-=1;
 			System.out.println("[ 유저 삭제 완료 ]");
@@ -82,7 +82,7 @@ public class UserDAO {
 		return 0;
 	}
 	
-	public void deleteUser(String id) {
+	public void deleteUser(CartDAO cDAO, String id) {
 		if(id==null) {
 			System.out.println("로그인 후 이용해 주세요");
 			return;
@@ -96,6 +96,7 @@ public class UserDAO {
 		int delIdx = checkIdx(id);
 		uList.remove(delIdx);
 		cnt-=1;
+		cDAO.deleteAllCart(id);
 		System.out.printf("[ %s 님 탈퇴 완료 ]\n",id);
 	}
 	public String login() {

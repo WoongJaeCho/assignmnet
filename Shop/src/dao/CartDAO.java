@@ -29,7 +29,9 @@ public class CartDAO {
 		return count;
 	}
 	
-	private void deleteAllCart(String id) {
+	public void deleteAllCart(String id) {
+		int count = countOneUserCart(id);
+		if(count == 0) return;
 		for(int i=0;i<cnt;i+=1) {
 			if(cList.get(i).getUserId().equals(id)) {
 				cList.remove(i);
@@ -51,7 +53,6 @@ public class CartDAO {
 				if(cList.get(i).getUserId().equals(id) && cList.get(i).getItemName().equals(name)) {
 					cList.remove(i);
 					cnt-=1;
-					System.out.printf("[ %s 삭제 완료 ]\n",name);
 					return;
 				}
 			}
@@ -85,11 +86,31 @@ public class CartDAO {
 		int sel = InputManger.getIntValue("메뉴 선택", 1, 2, 0);
 		if(sel == 1) {
 			deleteAllCart(id);
+			paymentProcess(total);
 			System.out.println("[ 전체 장바구니 구입 완료 ]");
 		} else if(sel == 2) {
 			String name = InputManger.getStringValue("구입할 아이템");
+			int price = iDAO.priceOneItem(name);
+			if(price == -1) {
+				System.out.println("존재하지 않는 아이템 입니다.");
+				return;
+			}
+			paymentProcess(price);
 			deleteOneCart(id,name);
+			System.out.printf("[ %s 구입 완료 ]\n",name);
 		} else if(sel == 0) {
+			return;
+		}
+	}
+	
+	private void paymentProcess(int pay) {
+		while(true) {
+			System.out.printf("구입 하신 상품 금액 : %d원 \n",pay);
+			int money = InputManger.getIntValue("금액");
+			if(pay != money) {
+				System.out.printf("%d원을 입금 시 구입이 가능합니다.\n",pay);
+				continue;
+			}
 			return;
 		}
 	}
@@ -119,6 +140,7 @@ public class CartDAO {
 		} else if(sel == 2) {
 			String name = InputManger.getStringValue("삭제할 아이템");
 			deleteOneCart(id,name);
+			System.out.printf("[ %s 삭제 완료 ]\n",name);
 		} else if(sel == 0) {
 			return;
 		}
@@ -161,12 +183,16 @@ public class CartDAO {
 		System.out.println("========================");
 	}
 	
-	public void deleteOneUser(String id) {
+	private void deleteOneUser(String id) {
 		int count = countOneUserCart(id);
 		if(count==0) {
 			InputManger.noDataSign();
 			return;
 		}
+		deleteOneUserCart(id);
+	}
+	
+	public void deleteOneUserCart(String id) {
 		for(int i=0;i<cnt;i+=1) {
 			if(cList.get(i).getUserId().equals(id)) {
 				cList.remove(i);

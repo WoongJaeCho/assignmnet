@@ -16,6 +16,15 @@ public class ItemDAO {
 		cateList = new ArrayList<String>();
 	}
 	
+	public int priceOneItem(String name) {
+		for(Item i : iList) {
+			if(i.getName().equals(name)) {
+				return i.getPrice();
+			}
+		}
+		return -1;
+	}
+	
 	public void addOneUserShoppingList(CartDAO cDAO, String id) {
 		String category = printCategory();
 		if(category == null) return;
@@ -78,9 +87,10 @@ public class ItemDAO {
 				int idx = checkDuplicate(category);
 				if(idx!=-1) {
 					System.out.println("중복된 카테고리가 있습니다.");
-					return;
+					continue;
 				}
 				cateList.add(category);
+				//cnt+=1;
 				System.out.println("[ 카테고리 추가 완료 ]");
 			} else if(sel == 2) {
 				System.out.println("[ 카테고리 수정 ]");
@@ -89,16 +99,16 @@ public class ItemDAO {
 					printCategoryList();
 				} else {
 					InputManger.noDataSign();
-					return;
+					continue;
 				}
 				sel = InputManger.getIntValue("수정할 카테고리 번호 선택", 1, cateList.size(), 0)-1;
-				if(sel == -1) return;
+				if(sel == -1) continue;;
 				String category = cateList.get(sel);
 				String newCategory = InputManger.getStringValue("[수정] 카테고리");
 				int idx = checkDuplicate(newCategory);
 				if(idx!=-1) {
 					System.out.println("중복된 카테고리가 있습니다.");
-					return;
+					continue;
 				}
 				categoryChange(category, newCategory);
 				cateList.set(sel, newCategory);
@@ -110,10 +120,10 @@ public class ItemDAO {
 					printCategoryList();
 				} else {
 					InputManger.noDataSign();
-					return;
+					continue;
 				}
 				sel = InputManger.getIntValue("삭제할 카테고리 선택", 1, cateList.size(), 0)-1;
-				if(sel == -1) return;
+				if(sel == -1) continue;;
 				String category = cateList.get(sel);
 				deleteitems(cDAO,category);
 				cateList.remove(sel);
@@ -137,9 +147,10 @@ public class ItemDAO {
 	private int printItemList(String category) {
 		int cnt=0;
 		if(iList.size()!=0) {
+			System.out.printf("    %-5s\t%s\n","Item","Price");
 			for(int i=0;i<iList.size();i+=1 ) {
 				if(iList.get(i).getCategory().equals(category)) {
-					System.out.printf("(%d) %s\t%d원\n",(cnt+1),iList.get(i).getName(),iList.get(i).getPrice());
+					System.out.printf("(%d) %-5s\t%d원\n",(cnt+1),iList.get(i).getName(),iList.get(i).getPrice());
 					cnt+=1;
 				}
 			}
@@ -166,19 +177,20 @@ public class ItemDAO {
 		}
 		return -1;
 	}
+	
 	private String printCategory() {
 		System.out.println("(0) 뒤로가기");
 		printCategoryList();
 		int sel = InputManger.getIntValue("카테고리 선택", 1, cateList.size(), 0)-1;
 		if(sel == -1) return null;
 		String category = cateList.get(sel);
-		int cnt = printItemList(category);
+		printItemList(category);
 		return category;
 	}
 	
 	public void itemList(CartDAO cDAO) {
 		if(cateList.size()==0) {
-			System.out.println("카테고리 입력할 것.");
+			System.err.println("카테고리 입력할 것.");
 			return;
 		}
 		
@@ -201,26 +213,31 @@ public class ItemDAO {
 			if(sel == 1) {
 				System.out.println("[ 아이템 추가 ]");
 				String category = printCategory();
-				if(category == null) return;
+				if(category == null) continue;
 				String item = InputManger.getStringValue("아이템");
 				int idx = checkDuplItem(item);
 				if(idx!=-1) {
 					System.out.println("중복된 아이템이 있습니다.");
-					return;
+					continue;
 				}
 				int price = InputManger.getIntValue("가격");
 				Item i = new Item(item, price, category);
 				iList.add(i);
+				cnt+=1;
 				System.out.println("[ 아이템 추가 완료 ]");
 			} else if(sel == 2) {
 				System.out.println("[ 아이템 수정 ]");
 				if(cnt==0) {
 					InputManger.noDataSign();
-					return;
+					continue;
 				}
 				String category = printCategory();
-				if(category == null) return;
-				int index = getIdxToName("수정할 아이템 이름 입력");
+				if(category == null) continue;
+				int index = getIdxToName("수정할 아이템 이름");
+				if(index == -1) {
+					System.out.println("해당 아이템이 존재하지 않습니다.");
+					continue;
+				}
 				String item = iList.get(index).getName();
 				int price = InputManger.getIntValue("[수정] 가격");
 				iList.set(index, new Item(item, price, category));
@@ -228,20 +245,24 @@ public class ItemDAO {
 			} else if(sel == 3) {
 				if(cnt==0) {
 					InputManger.noDataSign();
-					return;
+					continue;
 				}
 				System.out.println("[ 아이템 삭제 ]");
 				String category = printCategory();
-				if(category == null) return;
+				if(category == null) continue;
 				System.out.println("(0) 뒤로가기");
 				printItemList(category);
-				int index = getIdxToName("삭제할 아이템 이름 입력");
+				int index = getIdxToName("삭제할 아이템 이름");
+				if(index == -1) {
+					System.out.println("해당 아이템이 존재하지 않습니다.");
+					continue;
+				}
 				String item = iList.get(index).getName();
 				cDAO.deleteItems(item);
 				iList.remove(index);
+				cnt-=1;
 				System.out.println("[ 아이템 삭제 완료 ]");
 			} else if(sel == 0) {
-			
 				return;
 			}
 		}
@@ -258,6 +279,7 @@ public class ItemDAO {
 		}
 		return data;
 	}
+	
 	private void loadDataCategory() {
 		if(cnt==0) return;
 		int idx=1;

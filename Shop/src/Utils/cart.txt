@@ -1,8 +1,5 @@
 test01/수박
 test03/고등어
-test04/배
 test01/갈치
-test03/배
 test01/고등어
 test03/소고기
-test02/배
